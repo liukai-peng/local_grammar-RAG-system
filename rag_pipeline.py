@@ -274,6 +274,6 @@ if __name__ == "__main__":
     
     # 运行完整流程（需要API密钥才能生成答案）
     pipeline.run_full_pipeline(
-        api_key="sk-7c679cc5cc024856a4ffd2311a2b556c",  # 替换为你的API密钥
+        api_key="",  # 替换为你的API密钥
         test_query="什么是局部语法？"
     )

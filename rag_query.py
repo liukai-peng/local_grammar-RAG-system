@@ -254,7 +254,7 @@ if __name__ == "__main__":
     # 初始化系统
     rag_system = RAGQuerySystem(
         local_model_path=local_model_path,
-        api_key="sk-7c679cc5cc024856a4ffd2311a2b556c"  # 替换为你的API密钥
+        api_key=None  # 请通过配置文件设置API密钥
     )
     
     # 测试查询

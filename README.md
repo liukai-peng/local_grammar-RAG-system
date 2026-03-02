@@ -1,432 +1,167 @@
-# NLP学习项目 - PDF微调数据版
+# 局部语法RAG系统 (Local Grammar RAG System)
 
-这是为语言学研究者设计的NLP实践项目集合，**专门用于从PDF生成微调数据**。
+## 📚 项目概述
 
-## 🎯 核心理解：两种微调方式
+这是一个专为语言学研究者设计的**检索增强生成(RAG)系统**，专注于局部语法研究领域。系统通过向量检索技术，从大量PDF文献中快速找到相关内容，并结合大语言模型生成准确、专业的回答。
 
-### 1️⃣ 指令微调（Instruction Fine-tuning）- 适合你！
+## ✨ 核心功能
 
-**格式：问答对**
-```json
-{
-  "instruction": "什么是计算语言学？",
-  "input": "",
-  "output": "计算语言学是语言学和计算机科学的交叉领域..."
-}
-```
+### 🎯 智能检索
+- **语义搜索**：基于BGE-Large-ZH模型的向量检索
+- **多维度过滤**：支持按文献类型、作者等元数据过滤
+- **高效索引**：纯Python实现的向量存储，无需依赖ChromaDB
 
-**特点：**
-- 让模型学会回答特定领域的问题
-- 数据量需求少（几百到几千条）
-- 适合你的PDF文献知识库
-- **推荐使用！**
+### 🤖 智能生成
+- **专业回答**：基于DeepSeek等大语言模型
+- **上下文感知**：结合检索结果生成有依据的回答
+- **可调节参数**：支持调整温度、结果数量等参数
 
-### 2️⃣ 预训练（Pre-training）
+### 🖥️ 桌面应用
+- **直观界面**：基于PyQt5的现代化GUI
+- **实时反馈**：查询过程实时显示
+- **历史记录**：保存查询历史，方便重复查询
+- **参数配置**：可视化调整系统参数
 
-**格式：纯文本**
-```
-计算语言学是语言学和计算机科学的交叉领域。它使用计算方法来研究语言...
-```
+### 📄 文献管理
+- **PDF解析**：支持从PDF中提取文本
+- **结构化存储**：按章节、关键词组织文献内容
+- **多语言支持**：主要支持中文和英文文献
 
-**特点：**
-- 让模型学习语言模式
-- 需要大量数据（百万级token）
-- 适合从零训练基座模型
-- 不推荐个人使用
+## 🛠️ 技术栈
 
----
+- **前端**：PyQt5 (桌面应用)
+- **后端**：Python 3.12+
+- **向量检索**：Sentence-Transformers (BGE-Large-ZH)
+- **大语言模型**：DeepSeek (可配置)
+- **PDF处理**：PyMuPDF
+- **数据存储**：纯Python向量存储
 
-## 📦 微调数据准备项目
+## 📦 安装说明
 
-### 🆕 项目8：PDF内容提取与结构化工具
-**文件：** `project8_pdf_structurer.py`
-
-**功能：**
-- 从PDF中提取文本
-- 按章节分割
-- 提取关键概念
-- 生成结构化数据
-
-**输出：**
-```json
-{
-  "file_name": "论文.pdf",
-  "key_concepts": [{"concept": "计算语言学", "frequency": 23}],
-  "sections": [{"title": "引言", "content": "..."}],
-  "chunks": ["文本块1", "文本块2", ...]
-}
-```
-
-**运行方式：**
-```bash
-python project8_pdf_structurer.py
-```
-
-**依赖：**
-```bash
-pip install PyPDF2 jieba
-```
-
----
-
-### 🆕 项目9：问答对生成器
-**文件：** `project9_qa_generator.py`
-
-**功能：**
-- 从PDF内容自动生成问答对
-- 多种问题类型：
-  - 定义类："什么是X？"
-  - 解释类："为什么X？"
-  - 对比类："X与Y有什么区别？"
-  - 总结类："请总结这段内容"
-- 生成训练数据格式
-
-**输出：**
-```json
-{
-  "question": "什么是计算语言学？",
-  "answer": "计算语言学是...",
-  "type": "definition",
-  "chunk_id": 1
-}
-```
-
-**运行方式：**
-```bash
-python project9_qa_generator.py
-```
-
-**特点：** ⭐⭐⭐⭐⭐ **核心工具！自动生成问答对**
-
----
-
-### 🆕 项目10：指令微调数据生成器
-**文件：** `project10_finetuning_data.py`
-
-**功能：**
-- 支持多种训练格式：
-  - Alpaca格式 (instruction-input-output)
-  - Chat格式 (messages)
-  - ShareGPT格式 (conversations)
-  - LLaMA-2格式 (text)
-- 数据集分割（训练/验证/测试）
-- 数据质量检查
-- 生成微调脚本
-
-**输出格式示例：**
-
-**Alpaca格式：**
-```json
-{
-  "instruction": "什么是计算语言学？",
-  "input": "",
-  "output": "计算语言学是..."
-}
-```
-
-**Chat格式：**
-```json
-{
-  "messages": [
-    {"role": "user", "content": "什么是计算语言学？"},
-    {"role": "assistant", "content": "计算语言学是..."}
-  ]
-}
-```
-
-**运行方式：**
-```bash
-python project10_finetuning_data.py
-```
-
-**特点：** ⭐⭐⭐⭐⭐ **格式转换工具！**
-
----
-
-### 🆕 项目11：PDF微调数据完整流程工具
-**文件：** `project11_complete_pipeline.py`
-
-**功能：** 一键完成整个流程！
-1. 提取PDF内容
-2. 生成问答对
-3. 转换为训练格式
-4. 数据质量检查
-5. 生成微调脚本
-
-**运行方式：**
-```bash
-python project11_complete_pipeline.py
-```
-
-**特点：** ⭐⭐⭐⭐⭐ **推荐！一站式解决方案**
-
----
-
-## 🚀 快速开始
-
-### 安装依赖
-
-**必需依赖：**
-```bash
-pip install PyPDF2 jieba
-```
-
-**可选依赖（用于微调）：**
-```bash
-pip install transformers datasets torch
-```
-
-### 完整工作流程（推荐）
-
-**方式1：使用完整流程工具（最简单）**
+### 1. 环境准备
 
 ```bash
-cd "D:\Program Files\Desktop\文献2010-2013\NLP"
-python project11_complete_pipeline.py
-```
+# 推荐使用Conda创建虚拟环境
+conda create -n rag_env python=3.12
+conda activate rag_env
 
-然后按提示操作：
-1. 选择批量处理（默认目录）
-2. 等待处理完成
-3. 检查生成的数据
-4. 使用生成的微调脚本
-
-**方式2：分步执行（更灵活）**
-
-```bash
-# 步骤1：提取PDF内容
-python project8_pdf_structurer.py
-
-# 步骤2：生成问答对
-python project9_qa_generator.py
-
-# 步骤3：转换为训练格式
-python project10_finetuning_data.py
-```
-
----
-
-## 📊 你会得到什么
-
-运行完整流程后，你会得到：
-
-### 1. 结构化数据
-- `batch_structured_pdfs.json`
-- 包含PDF的章节、关键概念、文本块
-
-### 2. 问答对
-- `batch_qa_pairs.json`
-- 包含自动生成的问答对
-- 多种问题类型
-
-### 3. 训练数据
-- `train_data_alpaca.json` - Alpaca格式
-- `train_data_chat.json` - Chat格式
-- `train_data_sharegpt.json` - ShareGPT格式
-- `train_data_llama2.json` - LLaMA-2格式
-
-### 4. 微调脚本
-- `finetune_script.py`
-- 可直接运行的训练脚本
-
----
-
-## 💡 使用建议
-
-### 数据量建议
-
-| 任务类型 | 最小数据量 | 推荐数据量 |
-|---------|------------|------------|
-| 简单问答 | 100-500条 | 1000-3000条 |
-| 领域知识 | 500-1000条 | 3000-10000条 |
-| 复杂推理 | 1000-2000条 | 10000+条 |
-
-**你的PDF：** 100+篇，每篇生成20-50个问答对 = 2000-5000条数据
-
-### 质量检查
-
-生成数据后，务必检查：
-1. ✓ 问答对是否准确
-2. ✓ 问题是否清晰
-3. ✓ 回答是否完整
-4. ✓ 是否有重复
-5. ✓ 格式是否正确
-
-### 微调模型选择
-
-**推荐模型：**
-- **中文模型：** Qwen2.5-7B-Instruct, Baichuan2-7B-Chat
-- **英文模型：** LLaMA-2-7B-Chat, Mistral-7B-Instruct
-- **多语言：** Qwen2.5-14B-Instruct, Yi-34B-Chat
-
----
-
-## 🎯 实际应用场景
-
-### 场景1：创建领域问答机器人
-```
-你的PDF → 问答对 → 微调模型 → 领域问答机器人
-```
-
-### 场景2：文献知识库
-```
-你的PDF → 问答对 → 微调模型 → 智能文献检索
-```
-
-### 场景3：研究助手
-```
-你的PDF → 问答对 → 微调模型 → 研究助手AI
-```
-
-### 场景4：教学工具
-```
-你的PDF → 问答对 → 微调模型 → 教学辅助工具
-```
-
----
-
-## 📖 详细使用指南
-
-### 步骤1：提取PDF内容
-
-```bash
-python project8_pdf_structurer.py
-```
-
-选择模式：
-- 1. 单个PDF
-- 2. 批量处理
-- 3. 使用默认目录（推荐）
-
-**输出：** `batch_structured_pdfs.json`
-
-### 步骤2：生成问答对
-
-```bash
-python project9_qa_generator.py
-```
-
-选择模式：
-- 1. 单个PDF
-- 2. 批量处理
-- 3. 使用默认目录（推荐）
-
-**输出：** `batch_qa_pairs.json`
-
-### 步骤3：转换为训练格式
-
-```bash
-python project10_finetuning_data.py
-```
-
-选择输出格式：
-- 1. Alpaca格式（推荐）
-- 2. Chat格式
-- 3. ShareGPT格式
-- 4. LLaMA-2格式
-- 5. 生成所有格式
-
-**输出：** `train_data_*.json`
-
-### 步骤4：数据质量检查
-
-工具会自动检查：
-- 空字段
-- 长度分布
-- 重复数据
-
-### 步骤5：生成微调脚本
-
-工具会自动生成：
-- 加载模型代码
-- 数据预处理代码
-- 训练参数
-- 保存模型代码
-
----
-
-## 🔧 微调执行
-
-### 使用生成的脚本
-
-```bash
 # 安装依赖
-pip install transformers datasets torch
-
-# 运行微调脚本
-python finetune_script.py
+pip install -r requirements_app.txt
 ```
 
-### 手动微调（推荐）
+### 2. 模型下载
 
-参考transformers官方文档：
-https://huggingface.co/docs/transformers/training
+需要下载以下模型文件：
+
+1. **BGE-Large-ZH模型**：
+   - 下载地址：https://huggingface.co/BAAI/bge-large-zh-v1.5
+   - 解压到 `./bge-large-zh-v1.5/` 目录
+
+2. **ONNX版本**（可选，性能更优）：
+   - 下载地址：https://huggingface.co/BAAI/bge-large-zh-v1.5/tree/onnx
+   - 解压到 `./bge-large-zh-v1.5-onnx/` 目录
+
+### 3. 配置文件
+
+复制配置文件模板并填写API密钥：
+
+```bash
+cp config.json.example config.json
+# 编辑config.json文件，填写你的API密钥
+```
+
+配置文件说明：
+
+```json
+{
+  "api_key": "your-api-key-here",       // DeepSeek API密钥
+  "llm_model": "deepseek-chat",          // LLM模型名称
+  "persist_directory": "./chroma_db_merged_1024",  // 向量存储目录
+  "local_model_path": "./bge-large-zh-v1.5-onnx",  // 本地模型路径
+  "n_results": 5,                         // 检索结果数量
+  "temperature": 0.3,                     // 生成温度
+  "collection_name": "local_grammar_papers"  // 集合名称
+}
+```
+
+## 🚀 使用方法
+
+### 1. 启动应用
+
+```bash
+# 方法1：使用批处理脚本
+start_rag.bat
+
+# 方法2：直接运行Python文件
+python rag_desktop_app.py
+```
+
+### 2. 基本操作
+
+1. **输入查询**：在搜索框中输入你的问题
+2. **调整参数**：可调整检索结果数量和生成温度
+3. **执行查询**：点击"查询"按钮或按Enter键
+4. **查看结果**：在结果区域查看生成的回答和相关文献
+5. **历史记录**：在历史标签页查看之前的查询
+
+### 3. 示例查询
+
+- "什么是局部语法？"
+- "局部语法与系统功能语法的区别是什么？"
+- "如何构建局部语法模型？"
+- "局部语法在学术论文中的应用"
+
+## 📁 项目结构
+
+```
+RAG/
+├── bge-large-zh-v1.5/          # BGE模型文件
+├── bge-large-zh-v1.5-onnx/     # ONNX版本模型
+├── chroma_db_*/                # 向量数据库（自动生成）
+├── static/                     # 静态资源和PDF文献
+├── __pycache__/                # Python缓存
+├── rag_desktop_app.py          # 桌面应用主文件
+├── rag_query.py                # RAG查询系统
+├── pure_vector_store.py        # 纯Python向量存储
+├── pdf_parser.py               # PDF解析工具
+├── config.json.example         # 配置文件模板
+├── requirements_app.txt        # 依赖文件
+├── start_rag.bat               # 启动脚本
+├── README.md                   # 项目说明
+└── LICENSE                     # 开源许可证
+```
+
+## 🔍 工作原理
+
+1. **文档处理**：系统首先解析PDF文献，提取文本内容并进行分块
+2. **向量索引**：使用BGE-Large-ZH模型将文本块转换为向量并建立索引
+3. **用户查询**：接收用户输入的问题
+4. **语义检索**：将查询转换为向量，在索引中查找最相似的文本块
+5. **答案生成**：将检索到的相关文本作为上下文，通过大语言模型生成回答
+6. **结果展示**：在界面上展示生成的回答和相关文献信息
+
+## 📝 注意事项
+
+1. **API密钥**：需要有效的DeepSeek API密钥才能生成回答
+2. **模型文件**：首次运行需要下载模型文件，约1GB左右
+3. **性能要求**：推荐使用8GB以上内存的设备
+4. **网络连接**：生成回答时需要网络连接（如果使用在线LLM）
+5. **文献准备**：首次使用需要准备PDF文献并建立索引
+
+## 🤝 贡献
+
+欢迎贡献代码、提出问题或建议！
+
+## 📄 许可证
+
+本项目采用MIT许可证，详见LICENSE文件。
+
+## 📞 联系
+
+- 作者：liukai-peng
+- 邮箱：1284877660@qq.com
+- GitHub：https://github.com/liukai-peng/local_grammar-RAG-system
 
 ---
 
-## ❓ 常见问题
-
-### Q: 问答对质量如何保证？
-A:
-1. 生成后人工检查
-2. 删除不准确的问答对
-3. 补充重要的问答对
-4. 多轮迭代优化
-
-### Q: 数据量不够怎么办？
-A:
-1. 增加PDF数量
-2. 从同一PDF生成更多问答对
-3. 使用数据增强（同义改写）
-4. 结合公开数据集
-
-### Q: 微调需要什么硬件？
-A:
-- **最小配置：** 16GB GPU (7B模型)
-- **推荐配置：** 24GB+ GPU (7B-14B模型)
-- **CPU训练：** 可能需要几天（不推荐）
-
-### Q: 如何评估微调效果？
-A:
-1. 使用验证集评估
-2. 人工测试问答效果
-3. 对比基座模型表现
-4. 收集用户反馈
-
----
-
-## 🎓 下一步
-
-完成数据准备后，你可以：
-
-1. **开始微调**
-   - 使用生成的脚本
-   - 调整训练参数
-   - 监控训练过程
-
-2. **评估模型**
-   - 在验证集上测试
-   - 人工评估回答质量
-   - 对比不同模型
-
-3. **部署应用**
-   - 部署为API服务
-   - 集成到应用中
-   - 持续优化
-
-4. **分享成果**
-   - 开源微调模型
-   - 发布数据集
-   - 撰写技术博客
-
----
-
-## 📞 需要帮助？
-
-遇到问题时：
-1. 检查是否安装了PyPDF2和jieba
-2. 查看生成的JSON文件
-3. 检查问答对质量
-4. 随时向我提问
-
-**祝微调成功！用你的PDF创建专属的领域模型吧！** 🚀📚
+**⭐ 如果这个项目对你有帮助，请给它一个星标！**
